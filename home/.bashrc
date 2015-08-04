@@ -8,14 +8,14 @@ fi
 # User specific aliases and functions
 
 #Exports
-export ANDROID_HOME="$HOME/Apps/android-sdk"
-export GROOVY_HOME="$HOME/Apps/groovy-2.2.2"
+## export JAVA_HOME JDK/JRE ##
+export JAVA_HOME="/usr/java/latest"
+export ANDROID_HOME="$HOME/Android/Sdk"
 
 #Path
 PATH=$HOME/bin:$PATH
 PATH=$ANDROID_HOME/tools:$PATH
 PATH=$ANDROID_HOME/platform-tools:$PATH
-PATH=$GROOVY_HOME/bin:$PATH
 PATH=/usr/local/heroku/bin:$PATH
 
 #Aliases
@@ -38,8 +38,6 @@ alias q='exit'
 alias internet='ping google.com'
 
 #Functions
-# Adjust Brightness
-function brightness() { sudo su -c "echo $1 > /sys/class/backlight/intel_backlight/brightness"; }
 
 # Creates an archive (*.tar.gz) from given directory.
 function maketar() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
@@ -73,22 +71,6 @@ function g() {
     gradle -b $(upfind build.gradle) $@
 }
 
-# Android DEX Debugging
-function dex-method-count() {
-  cat $1 | head -c 92 | tail -c 4 | hexdump -e '1/4 "%d\n"'
-}
-function dex-method-count-by-package() {
-  dir=$(mktemp -d -t dex)
-  baksmali $1 -o $dir
-  for pkg in `find $dir/* -type d`; do
-    smali $pkg -o $pkg/classes.dex
-    count=$(dex-method-count $pkg/classes.dex)
-    name=$(echo ${pkg:(${#dir} + 1)} | tr '/' '.')
-    echo -e "$count\t$name"
-  done
-  rm -rf $dir
-}
-
 # Run these commands when terminal opens
 # Prints a firefly quote in red
 red='\e[0;31m' # Color Red
@@ -99,7 +81,10 @@ echo -e "${NC}"
 
 # HomeShick
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-# check update everytime shell terminal is opened 
-homeshick --quiet refresh 
+# check update everytime shell terminal is opened
+homeshick --quiet refresh
 # homeshick completion
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
+
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+[[ -s "/home/areitz/.gvm/bin/gvm-init.sh" ]] && source "/home/areitz/.gvm/bin/gvm-init.sh"
