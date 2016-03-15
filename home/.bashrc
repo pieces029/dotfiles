@@ -5,11 +5,18 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+#PS1
+function parse_git_branch {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
+}
+
+export PS1="[\e[0;32m\u@\h: \e[m\e[0;36m\w\e[m\e[1;35m\$(parse_git_branch)\e[m] >\n$ "
+
 # User specific aliases and functions
 
 #Exports
 ## export JAVA_HOME JDK/JRE ##
-export JAVA_HOME="/usr/java/latest"
+export JAVA_HOME="/usr/bin/java"
 export ANDROID_HOME="$HOME/Android/Sdk"
 
 #Path
@@ -25,8 +32,8 @@ alias top='htop'
 alias la='ls -la'
 alias ee='emacs -nw'
 alias shit='echo "aww, it will be alright"'
-alias ss='static-server' #from bin
-alias vpnhome='sshuttle --dns 192.168.0.1 -r areitz@icculus.andrewreitz.com:22 0/0'
+alias vpnhome='sshuttle --dns 192.168.0.1 -r pi@juta.chickenkiller.com:22 0/0'
+alias vpnwork='sshuttle --dns 204.62.151.87 -r areitz@gate.sierrabravo.net 0/0'
 alias df='df -H'
 alias du='du -ch'
 alias open='dolphin . &> /dev/null &'
@@ -38,6 +45,12 @@ alias q='exit'
 alias internet='ping google.com'
 
 #Functions
+
+# setup git dev for work
+function workrepo() {
+	git config user.email "andrew.reitz@nerdery.com"
+  git config user.name "Andrew Reitz"
+}
 
 # Creates an archive (*.tar.gz) from given directory.
 function maketar() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
@@ -86,5 +99,6 @@ homeshick --quiet refresh
 # homeshick completion
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-[[ -s "/home/areitz/.gvm/bin/gvm-init.sh" ]] && source "/home/areitz/.gvm/bin/gvm-init.sh"
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/areitz/.sdkman"
+[[ -s "/home/areitz/.sdkman/bin/sdkman-init.sh" ]] && source "/home/areitz/.sdkman/bin/sdkman-init.sh"
