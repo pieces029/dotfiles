@@ -1,4 +1,4 @@
-# .bashrc
+n# .bashrc
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -16,7 +16,7 @@ export PS1="[\e[0;32m\u@\h: \e[m\e[0;36m\w\e[m\e[1;35m\$(parse_git_branch)\e[m] 
 
 #Exports
 ## export JAVA_HOME JDK/JRE ##
-export JAVA_HOME="/usr/bin/java"
+export JAVA_HOME="/etc/alternatives/java_sdk/"
 export ANDROID_HOME="$HOME/Android/Sdk"
 
 #Path
@@ -43,12 +43,14 @@ alias untar='tar -zxvf'
 alias e='exit'
 alias q='exit'
 alias internet='ping google.com'
+alias g2work='cd $HOME/Projects/Nerdery'
+alias g2mine='cd $HOME/Projects/Mine'
 
 #Functions
 
 # setup git dev for work
 function workrepo() {
-	git config user.email "andrew.reitz@nerdery.com"
+  git config user.email "andrew.reitz@nerdery.com"
   git config user.name "Andrew Reitz"
 }
 
@@ -82,6 +84,13 @@ function gw() {
 # Finds the nearest build.gradle and executes it with the parameter passed in
 function g() {
     gradle -b $(upfind build.gradle) $@
+}
+
+# run a debug build of a android project
+function runDebug() {
+	# TODO
+	gw installDebug
+	adb shell am start -n ${manifest.@package}/$startActivity
 }
 
 # Run these commands when terminal opens
